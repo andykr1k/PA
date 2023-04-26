@@ -1,4 +1,3 @@
-import asyncio
 import os
 import openai
 from dotenv import load_dotenv
@@ -40,7 +39,7 @@ while(1):
             
             print('\n')
             count = 1
-            
+
             audio2 = r.listen(source2)
             ready = f"{bcolors.OKGREEN}I am now ready to listen!{bcolors.ENDC}"
             print(ready)
