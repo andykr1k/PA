@@ -19,9 +19,9 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-async def getResponse(message):
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": message}])
-    return response
+def getResponse(message):
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": str(message)}])
+    return response.choices[0].message.content
  
 def SpeakText(command):
     engine = pyttsx3.init()
@@ -36,26 +36,22 @@ while(1):
             if (count == 0):
                 print(f"{bcolors.WARNING}Adjusting ambient noise for better sound quality...{bcolors.ENDC}")
                 r.adjust_for_ambient_noise(source2, duration=0.2)
+                print('\n')
+                print(f"{bcolors.OKGREEN}I am now ready to listen!{bcolors.ENDC}")
+                SpeakText("I am now ready to listen!")
             
-            print('\n')
             count = 1
-
             audio2 = r.listen(source2)
-            ready = f"{bcolors.OKGREEN}I am now ready to listen!{bcolors.ENDC}"
-            print(ready)
-            SpeakText(ready)
-
             MyText = r.recognize_google(audio2)
             MyText = MyText.lower()
             
             print('\n')
-
             print(f"{bcolors.OKGREEN}User: ",MyText,bcolors.ENDC)
-            
             print('\n')
 
-            SpeakText(getResponse(MyText))
-            print(f"{bcolors.OKBLUE}Response: ", getResponse(MyText), bcolors.ENDC)
+            res = getResponse(MyText)
+            SpeakText(res)
+            print(f"{bcolors.OKBLUE}Response: ", res, bcolors.ENDC)
 
     except sr.RequestError as e:
         print(f"{bcolors.FAIL}Could not request results; {0} {bcolors.ENDC}".format(e))
